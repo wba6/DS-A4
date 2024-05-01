@@ -12,11 +12,18 @@ int main() {
     list.emplace_front();
     list.emplace_front();
     list.emplace_front();
-    backPropigate(list.end(),list, 1,1,1);
 
-    for(auto it:list){
+    for(double i = 0.0; i <= 1; i+=0.1){
+
+        backPropigate(list.end(),list, i,0.5,0.01);
+
+        std::cout << i << " :  ";
+        for(auto it:list){
         std::cout << it << " ";
+        }
+        std::cout << "\n\n";
     }
+
 
     std::cout << "\n";
 
@@ -25,13 +32,13 @@ int main() {
 
 void backPropigate(std::list<double>::iterator it, std::list<double>& list, double bigram, double bias, double slope) {
     if (it != list.begin() && it != list.end()) {
-        *it = slope = *(std::next(it)) * std::pow(10,-bigram);
-        backPropigate(std::prev(it), list, bigram, slope, slope);
+        *it = *(std::next(it)) * slope;
+        backPropigate(std::prev(it), list, bigram, slope, slope*10);
     } else if (it == list.end()) {
         it = std::prev(it);
-        *it = slope = std::pow(10,-bigram);
-        backPropigate(std::prev(it), list, bigram, slope, slope);
+        *it = std::abs(std::tanh(bigram)-bias);
+        backPropigate(std::prev(it), list, bigram, slope, slope*10);
     } else {
-        *it = abs(std::tanh(bigram)-bias);
+        *it = *(std::next(it)) * slope;
     }
 }
